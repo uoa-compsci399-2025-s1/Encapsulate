@@ -44,6 +44,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Cache node_modules
         uses: actions/cache@v4
@@ -81,66 +83,21 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
-  style:
-    needs: [check_changes, setup]
+  biome:
+    needs: [check_changes]
     if: ${{ needs.check_changes.outputs.exists == 'true' }}
     name: Prettier
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          fetch-depth: 2
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
-          run_install: false
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
 
-      # Restore cached node_modules
-      - name: Restore node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Check formatting
-        run: pnpm turbo:prettier
-
-  lint:
-    needs: [check_changes, setup]
-    if: ${{ needs.check_changes.outputs.exists == 'true' }}
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
-          run_install: false
-
-      # Restore cached node_modules
-      - name: Restore node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Run linting
-        run: pnpm turbo:lint
+      - name: Run Biome
+        run: biome ci . --error-on-warnings
 
   check-types:
     needs: [check_changes, setup]
@@ -149,6 +106,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -182,6 +141,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -226,6 +187,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -318,9 +281,9 @@ jobs:
 
   verify:
     name: Verify
-    needs: [check_changes, check-types, build, lint, style, test, codegen]
+    needs: [check_changes, check-types, build, biome, test, codegen]
     runs-on: ubuntu-latest
-    if: ${{ always() && (needs.check_changes.outputs.exists != 'true' || (needs.build.result == 'success' && needs.lint.result == 'success' && needs.style.result == 'success' && needs.test.result == 'success' && needs.codegen.result == 'success')) }}
+    if: ${{ always() && (needs.check_changes.outputs.exists != 'true' || (needs.build.result == 'success' && needs.biome.result == 'success' && needs.test.result == 'success' && needs.codegen.result == 'success')) }}
     steps:
       - name: All checks passed
         run: echo "All checks passed!"
