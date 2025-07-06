@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Manual deployment environment'
+        description: 'Deployment environment'
         type: environment
         required: true
 

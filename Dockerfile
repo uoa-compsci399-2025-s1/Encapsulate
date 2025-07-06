@@ -6,8 +6,14 @@ FROM node:22.16.0-slim AS base
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY . .
+
+# Step 1: Install modules
+COPY package.json pnpm-lock.yaml ./
 RUN corepack enable pnpm && pnpm install --frozen-lockfile --prod
 
+# Step 2: Copy the rest of the standalone build
+COPY . .
+
+# Step 3: Run the application
 EXPOSE 3000
 CMD ["node", "server.js"]
