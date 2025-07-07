@@ -124,8 +124,8 @@ const Radio: FC<RadioProps> = ({
                 forwardSyntheticEvent(e, registration, customValue)
               }
             }}
-            error={error}
             {...registration}
+            error={error}
             {...props}
           />
         </label>
