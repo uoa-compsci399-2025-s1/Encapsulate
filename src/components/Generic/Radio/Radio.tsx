@@ -117,14 +117,20 @@ const Radio: FC<RadioProps> = ({
                 forwardSyntheticEvent(e, registration, value)
               }
             }}
-            onFocus={(e) => {
+            onFocus={() => {
               setSelectedValue('')
 
-              if (registration && customValue) {
-                forwardSyntheticEvent(e, registration, customValue)
+              // Forward the empty selection to make the custom input active
+              if (registration && registration.onChange && customValue) {
+                const syntheticEvent = {
+                  target: {
+                    name: registration.name,
+                    value: customValue,
+                  },
+                } as unknown as React.ChangeEvent<HTMLInputElement>
+                registration.onChange(syntheticEvent)
               }
             }}
-            {...registration}
             error={error}
             {...props}
           />
