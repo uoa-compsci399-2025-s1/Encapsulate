@@ -165,7 +165,7 @@ const FormView: FC<FormViewProps> = ({ projectData, upcomingSemesters }) => {
       // Exclude these fields from the cleaned data
       ...cleanedData
     } = data
-    console.log(cleanedData)
+
     const res = await handleProjectFormSubmission(cleanedData as CreateProjectRequestBody)
 
     // Handle the response as needed

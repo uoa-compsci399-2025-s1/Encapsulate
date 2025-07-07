@@ -54,7 +54,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {startIcon && (
             <span className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5">{startIcon}</span>
           )}
-          <input type={actualType} className={inputClasses} {...props} {...inputProps} />
+          <input type={actualType} className={inputClasses} {...inputProps} />
           {isPasswordType ? (
             <button
               type="button"
