@@ -1,8 +1,8 @@
 import type { FC, InputHTMLAttributes } from 'react'
-import React, { useState, useRef, forwardRef } from 'react'
+import React, { useState, useRef } from 'react'
 import Input from '../Input/InputField'
 import { HiExclamation } from 'react-icons/hi'
-import { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
+import type { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
 
 interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
   id?: string

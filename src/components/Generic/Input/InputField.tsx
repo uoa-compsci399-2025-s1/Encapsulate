@@ -1,7 +1,7 @@
 'use client'
-import type { FC, ReactNode, InputHTMLAttributes } from 'react'
+import type { ReactNode, InputHTMLAttributes } from 'react'
 import React, { forwardRef, useState } from 'react'
-import { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
+import type { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
 import { HiExclamation } from 'react-icons/hi'
 import { LuEyeOff, LuEye } from 'react-icons/lu'
 import { mergeRefs } from 'react-laag'
@@ -80,3 +80,5 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 )
 
 export default Input
+
+Input.displayName = 'Input'
