@@ -8,6 +8,8 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 import type { User } from '@/payload-types'
+import { validateTurnstileToken } from 'next-turnstile'
+import { v4 } from 'uuid'
 
 export const RegisterRequestBodySchema = z.object({
   firstName: z.string(),
@@ -15,6 +17,7 @@ export const RegisterRequestBodySchema = z.object({
   email: z.string(),
   password: z.string(),
   role: z.nativeEnum(UserRoleWithoutAdmin),
+  token: z.string(),
 })
 export type RegisterRequestBody = z.infer<typeof RegisterRequestBodySchema>
 
@@ -25,6 +28,18 @@ export const POST = async (req: NextRequest) => {
 
   try {
     const body = RegisterRequestBodySchema.parse(await req.json())
+
+    const validationResponse = await validateTurnstileToken({
+      token: body.token,
+      secretKey: process.env.TURNSTILE_SECRET_KEY!,
+      // Optional: Add an idempotency key to prevent token reuse
+      idempotencyKey: v4(),
+      sandbox: process.env.NODE_ENV !== 'production',
+    })
+    if (!validationResponse.success && process.env.NODE_ENV !== 'production') {
+      return NextResponse.json({ error: 'Invalid token' }, { status: StatusCodes.BAD_REQUEST })
+    }
+
     let user: User
 
     const auth = await authDataService.getAuthByEmail(body.email)

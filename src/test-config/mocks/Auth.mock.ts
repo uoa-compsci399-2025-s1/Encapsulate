@@ -34,6 +34,12 @@ export const tokensMock = {
 
 export const AUTH_COOKIE_MOCK = 'auth_cookie_mock'
 
+// Cloudflare Turnstile Mocks
+export const TURNSTILE_PUBLIC_ALWAYS_PASS_KEY = '1x00000000000000000000AA'
+export const TURNSTILE_PUBLIC_ALWAYS_BLOCK_KEY = '2x00000000000000000000AB'
+export const TURNSTILE_SECRET_ALWAYS_PASS_KEY = '1x0000000000000000000000000000000AA'
+export const TURNSTILE_TOKEN_KEY_MOCK = 'token'
+
 export const googleUserResponseMock: UserInfoResponse = {
   sub: '1234567890',
   name: 'jeffery ji',

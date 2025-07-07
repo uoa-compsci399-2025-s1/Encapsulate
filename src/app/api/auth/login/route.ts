@@ -3,16 +3,19 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 import { NotFound } from 'payload'
+import { validateTurnstileToken } from 'next-turnstile'
+import { v4 } from 'uuid'
+import { cookies } from 'next/headers'
 
 import AuthDataService from '@/data-layer/services/AuthDataService'
 import AuthService from '@/business-layer/services/AuthService'
 import UserDataService from '@/data-layer/services/UserDataService'
-import { cookies } from 'next/headers'
 import { AUTH_COOKIE_NAME } from '@/types/Auth'
 
 export const LoginRequestBodySchema = z.object({
   email: z.string().email(),
   password: z.string(),
+  token: z.string(),
 })
 export type LoginRequestBody = z.infer<typeof LoginRequestBodySchema>
 
@@ -22,7 +25,23 @@ export const POST = async (req: NextRequest) => {
   const userDataService = new UserDataService()
 
   try {
-    const { email, password } = LoginRequestBodySchema.parse(await req.json())
+    const { email, password, token } = LoginRequestBodySchema.parse(await req.json())
+
+    const validationResponse = await validateTurnstileToken({
+      token,
+      secretKey: process.env.TURNSTILE_SECRET_KEY!,
+      // Optional: Add an idempotency key to prevent token reuse
+      idempotencyKey: v4(),
+      sandbox: process.env.NODE_ENV !== 'production',
+    })
+
+    if (
+      !validationResponse.success &&
+      (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test')
+    ) {
+      return NextResponse.json({ error: 'Invalid token' }, { status: StatusCodes.BAD_REQUEST })
+    }
+
     const auth = await authDataService.getAuthByEmail(email)
     const user = await userDataService.getUserByEmail(email)
 
@@ -34,9 +53,9 @@ export const POST = async (req: NextRequest) => {
       )
     }
 
-    const token = authService.generateJWT(user)
+    const jwtToken = authService.generateJWT(user)
     const cookieStore = await cookies()
-    cookieStore.set(AUTH_COOKIE_NAME, token, {
+    cookieStore.set(AUTH_COOKIE_NAME, jwtToken, {
       httpOnly: true,
       // secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',

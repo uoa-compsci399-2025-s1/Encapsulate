@@ -6,6 +6,7 @@ import { createMockNextPostRequest } from '@/test-config/utils'
 import { UserRole, UserRoleWithoutAdmin } from '@/types/User'
 import UserDataService from '@/data-layer/services/UserDataService'
 import AuthDataService from '@/data-layer/services/AuthDataService'
+import { TURNSTILE_TOKEN_KEY_MOCK } from '@/test-config/mocks/Auth.mock'
 
 describe('tests /api/auth/register', () => {
   const userDataService = new UserDataService()
@@ -18,6 +19,7 @@ describe('tests /api/auth/register', () => {
       email: 'test@example.com',
       password: 'password123',
       role: UserRoleWithoutAdmin.Client,
+      token: TURNSTILE_TOKEN_KEY_MOCK,
     }
     const res = await POST(createMockNextPostRequest('/api/auth/register', body))
     const json = await res.json()
@@ -43,6 +45,7 @@ describe('tests /api/auth/register', () => {
       email: 'test@example.com',
       password: 'password123',
       role: UserRoleWithoutAdmin.Client,
+      token: TURNSTILE_TOKEN_KEY_MOCK,
     }
     await userDataService.createUser(body)
     const allUsersBeforeRegister = (await userDataService.getAllUsers()).docs
@@ -59,6 +62,7 @@ describe('tests /api/auth/register', () => {
       email: 'test@example.com',
       password: 'password123',
       role: UserRoleWithoutAdmin.Client,
+      token: TURNSTILE_TOKEN_KEY_MOCK,
     }
     await POST(createMockNextPostRequest('/api/auth/register', body))
 
@@ -76,6 +80,7 @@ describe('tests /api/auth/register', () => {
       email: 'test@example.com',
       password: 'password123',
       role: UserRole.Admin,
+      token: TURNSTILE_TOKEN_KEY_MOCK,
     }
     await POST(createMockNextPostRequest('/api/auth/register', body))
 
