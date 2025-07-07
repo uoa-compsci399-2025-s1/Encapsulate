@@ -1,4 +1,4 @@
-import { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
+import type { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
 
 export const forwardSyntheticEvent = (
   event: React.ChangeEvent<HTMLInputElement>,

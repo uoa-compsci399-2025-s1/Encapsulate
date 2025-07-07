@@ -27,19 +27,16 @@ const Radio: FC<RadioProps> = ({
   registration,
   ...props
 }) => {
-  const [selectedValue, setSelectedValue] = useState(defaultValue || '')
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(defaultValue || undefined)
   const [customValue, setCustomValue] = useState('')
 
   const hasInitialized = useRef(false)
 
   if (defaultValue && !hasInitialized.current) {
-    // Check if the initial value exists in the predefined values
     if (values.includes(defaultValue)) {
       setSelectedValue(defaultValue)
       setCustomValue('')
     } else if (customInput) {
-      // If value doesn't exist in predefined options and customInput is enabled,
-      // select the custom input and prefill it
       setSelectedValue('')
       setCustomValue(defaultValue)
     }
@@ -50,7 +47,6 @@ const Radio: FC<RadioProps> = ({
     const value = e.target.value
     setSelectedValue(value)
 
-    // Forward the change to react-hook-form if registration is provided
     if (registration) {
       forwardSyntheticEvent(e, registration, value)
     }
