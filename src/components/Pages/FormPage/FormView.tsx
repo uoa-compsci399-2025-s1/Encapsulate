@@ -489,7 +489,6 @@ const FormView: FC<FormViewProps> = ({ projectData, upcomingSemesters }) => {
                   defaultValue={projectData?.specialEquipmentRequirements ?? ''}
                   registration={register('specialEquipmentRequirements', {
                     required: 'Please select one option',
-                    validate: (value) => value !== '' || 'Input field must not be empty',
                   })}
                 />
               </li>
@@ -522,7 +521,6 @@ const FormView: FC<FormViewProps> = ({ projectData, upcomingSemesters }) => {
                   defaultValue={projectData?.numberOfTeams ?? ''}
                   registration={register('numberOfTeams', {
                     required: 'Number of teams is required',
-                    validate: (value) => value !== '' || 'Number of teams is required',
                   })}
                 />
               </li>
