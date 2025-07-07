@@ -39,8 +39,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const inputProps = registration
       ? {
-          ...registration,
           ...props,
+          ...registration,
           ref: inputRef,
         }
       : {
