@@ -1,7 +1,8 @@
 import type { FC, InputHTMLAttributes } from 'react'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, forwardRef } from 'react'
 import Input from '../Input/InputField'
 import { HiExclamation } from 'react-icons/hi'
+import { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
 
 interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
   id?: string
@@ -11,6 +12,7 @@ interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: boolean
   errorMessage?: string
   defaultValue?: string
+  registration?: UseFormRegisterReturn<FieldPath<FieldValues>>
 }
 
 const Radio: FC<RadioProps> = ({
@@ -21,10 +23,10 @@ const Radio: FC<RadioProps> = ({
   error = false,
   errorMessage = 'Input field must not be empty',
   defaultValue = '',
+  registration,
   ...props
 }) => {
-  // selectedValue state has a `space` to prevent the empty input field being automatically chosen
-  const [selectedValue, setSelectedValue] = useState(' ')
+  const [selectedValue, setSelectedValue] = useState(defaultValue || '')
   const [customValue, setCustomValue] = useState('')
 
   const hasInitialized = useRef(false)
@@ -37,15 +39,29 @@ const Radio: FC<RadioProps> = ({
     } else if (customInput) {
       // If value doesn't exist in predefined options and customInput is enabled,
       // select the custom input and prefill it
-      setSelectedValue(defaultValue)
+      setSelectedValue('')
       setCustomValue(defaultValue)
     }
     hasInitialized.current = true
   }
 
-  const handleChange = (e: React.MouseEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    setSelectedValue(input.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setSelectedValue(value)
+
+    // Forward the change to react-hook-form if registration is provided
+    if (registration && registration.onChange) {
+      // Create a synthetic event that react-hook-form can process
+      const syntheticEvent = {
+        ...e,
+        target: {
+          ...e.target,
+          name: registration.name,
+          value: value,
+        },
+      }
+      registration.onChange(syntheticEvent)
+    }
   }
 
   const borderErrorStyle = `${error ? 'border-pink-accent hover:outline-dark-pink peer-focus:outline-dark-pink' : 'border-steel-blue hover:outline-deeper-blue peer-focus:outline-deeper-blue'}`
@@ -70,7 +86,9 @@ const Radio: FC<RadioProps> = ({
             className="opacity-0 peer"
             value={value}
             checked={selectedValue === value}
-            onClick={handleChange}
+            onChange={handleChange}
+            name={registration?.name}
+            onBlur={registration?.onBlur}
             {...props}
           />
           <span className={`${radioStyle} ${borderErrorStyle} ${className}`}>
@@ -85,10 +103,23 @@ const Radio: FC<RadioProps> = ({
             type="radio"
             style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
             className="opacity-0 peer"
-            value={customValue}
-            checked={selectedValue === customValue}
-            onClick={handleChange}
-            {...props}
+            value=""
+            checked={selectedValue === ''}
+            onChange={(e) => {
+              setSelectedValue('')
+
+              if (registration && registration.onChange) {
+                const syntheticEvent = {
+                  ...e,
+                  target: {
+                    ...e.target,
+                    name: registration.name,
+                    value: customValue,
+                  },
+                }
+                registration.onChange(syntheticEvent)
+              }
+            }}
           />
           <span className={`${radioStyle} ${borderErrorStyle} ${className}`}>
             <div className={`${dotErrorStyle}`} />
@@ -99,9 +130,39 @@ const Radio: FC<RadioProps> = ({
             className="inline h-8"
             value={customValue}
             onChange={(e) => {
-              setCustomValue(e.target.value)
+              const value = e.target.value
+              setCustomValue(value)
+
+              if (selectedValue === '') {
+                if (registration && registration.onChange) {
+                  const syntheticEvent = {
+                    ...e,
+                    target: {
+                      ...e.target,
+                      name: registration.name,
+                      value: value,
+                    },
+                  }
+                  registration.onChange(syntheticEvent)
+                }
+              }
+            }}
+            onFocus={() => {
+              setSelectedValue('')
+
+              // Forward the empty selection to make the custom input active
+              if (registration && registration.onChange && customValue) {
+                const syntheticEvent = {
+                  target: {
+                    name: registration.name,
+                    value: customValue,
+                  },
+                } as unknown as React.ChangeEvent<HTMLInputElement>
+                registration.onChange(syntheticEvent)
+              }
             }}
             error={error}
+            {...props}
           />
         </label>
       )}
