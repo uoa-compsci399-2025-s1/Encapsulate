@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react'
 import Input from '../Input/InputField'
 import { HiExclamation } from 'react-icons/hi'
 import type { FieldPath, FieldValues, UseFormRegisterReturn } from 'react-hook-form'
+import { forwardSyntheticEvent } from './RadioUtils'
 
 interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
   id?: string
@@ -50,17 +51,8 @@ const Radio: FC<RadioProps> = ({
     setSelectedValue(value)
 
     // Forward the change to react-hook-form if registration is provided
-    if (registration && registration.onChange) {
-      // Create a synthetic event that react-hook-form can process
-      const syntheticEvent = {
-        ...e,
-        target: {
-          ...e.target,
-          name: registration.name,
-          value: value,
-        },
-      }
-      registration.onChange(syntheticEvent)
+    if (registration) {
+      forwardSyntheticEvent(e, registration, value)
     }
   }
 
@@ -104,20 +96,12 @@ const Radio: FC<RadioProps> = ({
             style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
             className="opacity-0 peer"
             value=""
-            checked={selectedValue === ''}
+            checked={selectedValue === '' && !!customValue}
             onChange={(e) => {
               setSelectedValue('')
 
-              if (registration && registration.onChange) {
-                const syntheticEvent = {
-                  ...e,
-                  target: {
-                    ...e.target,
-                    name: registration.name,
-                    value: customValue,
-                  },
-                }
-                registration.onChange(syntheticEvent)
+              if (registration) {
+                forwardSyntheticEvent(e, registration, customValue)
               }
             }}
           />
@@ -133,18 +117,8 @@ const Radio: FC<RadioProps> = ({
               const value = e.target.value
               setCustomValue(value)
 
-              if (selectedValue === '') {
-                if (registration && registration.onChange) {
-                  const syntheticEvent = {
-                    ...e,
-                    target: {
-                      ...e.target,
-                      name: registration.name,
-                      value: value,
-                    },
-                  }
-                  registration.onChange(syntheticEvent)
-                }
+              if (selectedValue === '' && registration) {
+                forwardSyntheticEvent(e, registration, value)
               }
             }}
             onFocus={() => {
