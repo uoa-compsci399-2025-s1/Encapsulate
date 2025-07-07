@@ -125,6 +125,7 @@ const Radio: FC<RadioProps> = ({
               }
             }}
             error={error}
+            {...registration}
             {...props}
           />
         </label>

@@ -5,8 +5,6 @@ export const forwardSyntheticEvent = (
   registration: UseFormRegisterReturn<FieldPath<FieldValues>>,
   value: string,
 ) => {
-  event.persist()
-
   const syntheticEvent = {
     ...event,
     target: {
