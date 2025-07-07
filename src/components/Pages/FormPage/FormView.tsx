@@ -554,7 +554,9 @@ const FormView: FC<FormViewProps> = ({ projectData, upcomingSemesters }) => {
                 />
               </li>
               <li>
-                <label htmlFor="FutureSemesters">Semester Availability</label>
+                <label htmlFor="FutureSemesters">
+                  Semester Availability <span className="text-pink-accent">*</span>
+                </label>
                 <p className="form-question-subheading">
                   Please select all the semesters you would like your project to be considered for.
                 </p>
