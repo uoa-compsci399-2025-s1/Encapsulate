@@ -15,7 +15,7 @@ const UserService = {
   /**
    * Logs in a user with the provided email and password.
    *
-   * @param options The login options containing the user's email and password.
+   * @param options The login options containing the user's email, password, and Cloudflare Turnstile token.
    * @returns A promise resolving to an object containing:
    *   - `message` string: A message indicating the result of the login attempt.
    *   - `redirect` string: A URL to redirect the user after a successful login.
@@ -23,7 +23,7 @@ const UserService = {
    *   - `error` string: An error message if the login attempt failed.
    *   - `details` {@link typeToFlattenedError}: Validation error details, if any.
    */
-  login: async function (options: { email: string; password: string }): Promise<{
+  login: async function (options: { email: string; password: string; token: string }): Promise<{
     status: StatusCodes
     message?: string
     redirect?: string
@@ -40,7 +40,7 @@ const UserService = {
   /**
    * Registers a new user with the provided details.
    *
-   * @param options The registration options containing the user's email, password, first name, last name, and role.
+   * @param options The registration options containing the user's email, password, first name, last name, role, and Cloudflare Turnstile token.
    * @returns A promise resolving to an object containing:
    *   - `status` {@link StatusCodes}: The HTTP status code of the response.
    *   - `message` string: A message indicating the result of the registration attempt.
@@ -53,6 +53,7 @@ const UserService = {
     firstName: string
     lastName: string
     role: UserRoleWithoutAdmin
+    token: string
   }): Promise<{
     status: StatusCodes
     message?: string

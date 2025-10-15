@@ -45,6 +45,14 @@ declare global {
        * [docs](https://github.com/uoa-compsci399-2025-s1/Encapsulate/wiki/AWS-Deployment#creating-an-s3-bucket-for-cms)
        */
       S3_BUCKET: string
+      /**
+       * The public Cloudflare Turnstile site key for the website
+       */
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: string
+      /**
+       * The secret Cloudflare Turnstile site key for the website
+       */
+      TURNSTILE_SECRET_KEY: string
     }
   }
 }

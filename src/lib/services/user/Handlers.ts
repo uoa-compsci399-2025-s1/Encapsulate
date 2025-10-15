@@ -9,6 +9,7 @@ import type { RegisterRequestBodySchema } from '@/app/api/auth/register/route'
 import type { UserRoleWithoutAdmin } from '@/types/User'
 import { isValidEmail, isValidPassword } from '@/lib/util/AuthUtil'
 import type { UserCombinedInfo } from '@/types/Collections'
+import { StatusCodes } from 'http-status-codes'
 
 /**
  * This function handles the form submission for user login.
@@ -24,14 +25,20 @@ export async function handleLogin(formData: FormData): Promise<{
 }> {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
+  const token = formData.get('cf-turnstile-response') as string
 
+  if (!token) return { error: 'Security check failed. Please try again.' }
   if (!email && !password) return { error: 'Email and password are required' }
   if (!email) return { error: 'Email is required' }
   if (!password) return { error: 'Password is required' }
   if (!isValidEmail(email)) return { error: 'Invalid email address format' }
 
-  const { message, redirect, status, error, details } = await UserService.login({ email, password })
-  if (status === 200) {
+  const { message, redirect, status, error, details } = await UserService.login({
+    email,
+    password,
+    token,
+  })
+  if (status === StatusCodes.OK) {
     return { message, redirect }
   } else {
     return { error, message, details }
@@ -78,6 +85,7 @@ export const handleRegister = async (
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const role = formData.get('role') as UserRoleWithoutAdmin
+  const token = formData.get('cf-turnstile-response') as string
 
   if (!isValidEmail(email)) return { error: 'Invalid email address' }
   if (!isValidPassword(password).isValid) {
@@ -90,9 +98,10 @@ export const handleRegister = async (
     firstName,
     lastName,
     role,
+    token,
   })
 
-  if (status === 201) {
+  if (status === StatusCodes.CREATED) {
     redirect('/auth/login')
   } else {
     return { error, message, details }

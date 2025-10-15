@@ -7,6 +7,7 @@ import {
   adminMock,
   CLIENT_JWT_MOCK,
   clientMock,
+  TURNSTILE_TOKEN_KEY_MOCK,
 } from '@/test-config/mocks/Auth.mock'
 import AuthDataService from '@/data-layer/services/AuthDataService'
 import AuthService from '@/business-layer/services/AuthService'
@@ -39,6 +40,7 @@ describe('tests /api/auth/login', async () => {
       createMockNextPostRequest('/api/auth/login', {
         email: clientMock.email,
         password: 'password123',
+        token: TURNSTILE_TOKEN_KEY_MOCK,
       }),
     )
 
@@ -62,6 +64,7 @@ describe('tests /api/auth/login', async () => {
       createMockNextPostRequest('/api/auth/login', {
         email: adminMock.email,
         password: 'password123',
+        token: TURNSTILE_TOKEN_KEY_MOCK,
       }),
     )
 
@@ -96,6 +99,7 @@ describe('tests /api/auth/login', async () => {
       createMockNextPostRequest('/api/auth/login', {
         email: clientMock.email,
         password: 'wrongpassword',
+        token: TURNSTILE_TOKEN_KEY_MOCK,
       }),
     )
     expect(res.status).toBe(StatusCodes.UNAUTHORIZED)
@@ -105,9 +109,22 @@ describe('tests /api/auth/login', async () => {
       createMockNextPostRequest('/api/auth/login', {
         email: 'wrongemail@example.com',
         password: 'password123',
+        token: TURNSTILE_TOKEN_KEY_MOCK,
       }),
     )
     expect(res2.status).toBe(StatusCodes.UNAUTHORIZED)
     expect((await res2.json()).error).toBe('Invalid email or password')
+  })
+
+  it('should return a 401 if the cloudflare turnstile fails', async () => {
+    const res = await POST(
+      createMockNextPostRequest('/api/auth/login', {
+        email: 'whatdafuq@gmail.com',
+        password: 'password123',
+        token: '',
+      }),
+    )
+    expect(res.status).toBe(StatusCodes.BAD_REQUEST)
+    expect((await res.json()).error).toBe('Invalid token')
   })
 })

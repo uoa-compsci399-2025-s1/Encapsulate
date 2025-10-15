@@ -12,6 +12,8 @@ import {
   STUDENT_JWT_MOCK,
   studentMock,
   tokensMock,
+  TURNSTILE_PUBLIC_ALWAYS_PASS_KEY,
+  TURNSTILE_SECRET_ALWAYS_PASS_KEY,
   UUID_MOCK,
 } from './mocks/Auth.mock'
 import AuthService from '@/business-layer/services/AuthService'
@@ -97,6 +99,8 @@ beforeEach(async () => {
 
   const authService = new AuthService()
   process.env.JWT_SECRET = JWT_SECRET_MOCK
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = TURNSTILE_PUBLIC_ALWAYS_PASS_KEY
+  process.env.TURNSTILE_SECRET_KEY = TURNSTILE_SECRET_ALWAYS_PASS_KEY
   adminToken = authService.generateJWT(adminMock, ACCESS_TOKEN_MOCK)
   clientToken = authService.generateJWT(clientMock, ACCESS_TOKEN_MOCK)
   studentToken = authService.generateJWT(studentMock, ACCESS_TOKEN_MOCK)

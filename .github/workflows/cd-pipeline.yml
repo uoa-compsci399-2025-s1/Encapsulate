@@ -109,6 +109,8 @@ jobs:
             echo "S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET_ACCESS_KEY }}" >> .env
             echo "S3_REGION=${{ vars.S3_REGION }}" >> .env
             echo "S3_BUCKET=${{ vars.S3_BUCKET }}" >> .env
+            echo "NEXT_PUBLIC_TURNSTILE_SITE_KEY=${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" >> .env
+            echo "TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}" >> .env
 
             echo "Stopping old containers"
             docker-compose down
@@ -209,6 +211,8 @@ jobs:
             echo "S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET_ACCESS_KEY }}" >> .env
             echo "S3_REGION=${{ vars.S3_REGION }}" >> .env
             echo "S3_BUCKET=${{ vars.S3_BUCKET }}" >> .env
+            echo "NEXT_PUBLIC_TURNSTILE_SITE_KEY=${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" >> .env
+            echo "TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}" >> .env
 
             echo "Stopping old containers"
             docker-compose down
