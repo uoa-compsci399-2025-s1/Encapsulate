@@ -487,9 +487,8 @@ const FormView: FC<FormViewProps> = ({ projectData, upcomingSemesters }) => {
                   error={!!errors.specialEquipmentRequirements}
                   errorMessage={errors.specialEquipmentRequirements?.message}
                   defaultValue={projectData?.specialEquipmentRequirements ?? ''}
-                  {...register('specialEquipmentRequirements', {
+                  registration={register('specialEquipmentRequirements', {
                     required: 'Please select one option',
-                    validate: (value) => value !== '' || 'Input field must not be empty',
                   })}
                 />
               </li>
@@ -520,9 +519,8 @@ const FormView: FC<FormViewProps> = ({ projectData, upcomingSemesters }) => {
                   error={!!errors.numberOfTeams}
                   errorMessage={errors.numberOfTeams?.message}
                   defaultValue={projectData?.numberOfTeams ?? ''}
-                  {...register('numberOfTeams', {
+                  registration={register('numberOfTeams', {
                     required: 'Number of teams is required',
-                    validate: (value) => value !== '' || 'Number of teams is required',
                   })}
                 />
               </li>
@@ -554,7 +552,9 @@ const FormView: FC<FormViewProps> = ({ projectData, upcomingSemesters }) => {
                 />
               </li>
               <li>
-                <label htmlFor="FutureSemesters">Semester Availability</label>
+                <label htmlFor="FutureSemesters">
+                  Semester Availability <span className="text-pink-accent">*</span>
+                </label>
                 <p className="form-question-subheading">
                   Please select all the semesters you would like your project to be considered for.
                 </p>

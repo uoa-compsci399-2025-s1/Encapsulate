@@ -17,6 +17,8 @@
 
 Deployment: https://compsci399.com
 
+Project management tool: [GitHub Projects](https://github.com/orgs/uoa-compsci399-2025-s1/projects/28?query=sort%3Aupdated-desc+is%3Aopen)
+
 Encapsulate is a platform that aims to provide a comprehensive solution for Clients, Admins, and Students to manage, submit, and view projects for the [University of Auckland's BSc Computer Science](https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/computer-science/undergraduate/bsc-compsci-from-2019.html) capstone course, COMPSCI 399. Encapsulate is built for a user-friendly interface, aiming for an efficient and effective user experience.
 
 ## Setting up the Project
@@ -166,3 +168,9 @@ See further towards contributing guidelines in the [GitHub Wiki](https://github.
 ## License
 
 This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
+
+## Future Plans
+
+For future enhancement of Encapsulate, there are several extensions we would like to recommend. First, support for project attachments and in-modal project editing. The project could also be further enhanced by implementing a messaging system between clients and admins to streamline communication regarding project proposals. Currently, admins must manually copy and paste client emails to contact them. Alternatively, an automated email notification system could be introduced to inform clients of any issues with their proposals.
+
+Another potential extension is the full automation of the capstone selection and allocation process. This would allow students to form groups and submit their project preferences to Encapsulate, to then be automatically matched to the most suitable project. To ensure authenticity and prevent impersonation, this would likely require the checking of student SSO login credentials against the list of students enrolled in COMPSCI399. This enhancement would reduce errors and further ease the workload on course coordinators.

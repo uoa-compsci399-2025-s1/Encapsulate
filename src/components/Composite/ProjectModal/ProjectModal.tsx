@@ -135,13 +135,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         </div>
 
         {/* project description*/}
-        <p className="text-sm text-dark-blue font-inter text-left pb-3">
+        <p className="text-sm text-dark-blue font-inter text-left pb-3 whitespace-pre-wrap">
           {projectInfo.description}
         </p>
 
         {/* desired output */}
         <Capsule variant="muted_blue" text="Desired output" />
-        <p className="text-sm text-dark-blue font-inter text-left mb-7">
+        <p className="text-sm text-dark-blue font-inter text-left mb-7 whitespace-pre-wrap">
           {projectInfo.desiredOutput}
         </p>
 
@@ -224,7 +224,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         {projectInfo.desiredTeamSkills && projectInfo.desiredTeamSkills != '' && (
           <>
             <Capsule variant="light_beige" text="Desired team skills" />
-            <p className="text-sm text-dark-blue font-inter text-left mb-3">
+            <p className="text-sm text-dark-blue font-inter text-left mb-3 whitespace-pre-wrap">
               {projectInfo.desiredTeamSkills}
             </p>
           </>
@@ -232,7 +232,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         {projectInfo.availableResources && (
           <>
             <Capsule variant="light_beige" text="Available resources" />
-            <p className="text-sm text-dark-blue font-inter text-left">
+            <p className="text-sm text-dark-blue font-inter text-left whitespace-pre-wrap">
               {projectInfo.availableResources}
             </p>
           </>
